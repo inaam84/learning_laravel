@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('test');
     }
 
     /**
@@ -24,5 +26,12 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function test()
+    {
+        $countries = Country::withCount('employees')->having('employees_count', '>', 0)->where('name', 'like', 'A%')->get();
+
+        return view('test', compact('countries'));
     }
 }
